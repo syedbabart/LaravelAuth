@@ -104,8 +104,9 @@ class MainController extends Controller
     }
 
     function staff(){
+        $users = Admin::all();
         $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
-        return view('admin.staff', $data);
+        return view('admin.staff', $data, ['users'=>$users]);
     }
 
     function userDashboard(){

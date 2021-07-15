@@ -31,6 +31,34 @@
                     <li> <a href="/admin/staff">Staff</a></li>
 
                 </ul>
+                <h4>Staff</h4>
+                <table class="table table-hover">
+                <thead>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Admin or User?</th>
+                    <th>Is Active?</th>
+                    <th>Options</th>
+                </thead>
+                <tbody>
+                    @foreach($users as $user)
+                    <tr>
+                    <td>{{ $user['id'] }}</td>
+                    <td>{{ $user['name'] }}</td>
+                    <td>{{ $user['email'] }}</td>
+                    @if($user['isUser'] == 1)
+                    <td>User</td>
+                    @endif
+                    @if($user['isUser'] == 0)
+                    <td>Admin</td>
+                    @endif
+                    <td></td>
+                    <td></td>
+                    </tr>
+                    @endforeach
+                </tbody>
+                </table>
             </div>
         </div>
 @endsection
