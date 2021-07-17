@@ -118,4 +118,11 @@ class MainController extends Controller
         $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
         return view('user.profile', $data);
     }
+
+    function delete($id){
+        $data=Admin::find($id);
+        $data->delete();
+        return redirect('admin/staff');
+
+    }
 }

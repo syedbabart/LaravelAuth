@@ -54,7 +54,7 @@
                     <td>Admin</td>
                     @endif
                     <td></td>
-                    <td></td>
+                    <td><a href={{ "delete/".$user['id'] }}>Delete</a></td>
                     </tr>
                     @endforeach
                 </tbody>

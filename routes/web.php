@@ -25,6 +25,7 @@ Route::get('/auth/logout',[MainController::class,'logout'])->name('auth.logout')
 
 
 
+
 Route::group(['middleware'=>['AuthCheck']], function(){
     Route::get('/auth/login',[MainController::class, 'login'])->name('auth.login');
     Route::get('/auth/register',[MainController::class, 'register'])->name('auth.register');
@@ -32,6 +33,7 @@ Route::group(['middleware'=>['AuthCheck']], function(){
     Route::get('/admin/profile', [MainController::class, 'profile']);
     Route::get('/admin/settings', [MainController::class, 'settings']);
     Route::get('/admin/staff', [MainController::class, 'staff']);
+    Route::get('/admin/delete/{id}', [MainController::class, 'delete']);
     Route::get('/user/dashboard', [MainController::class, 'userDashboard']);
     Route::get('/user/profile', [MainController::class, 'userProfile']);
 });
