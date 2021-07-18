@@ -53,12 +53,43 @@
                     @if($user['isUser'] == 0)
                     <td>Admin</td>
                     @endif
-                    <td></td>
-                    <td><a href={{ "delete/".$user['id'] }}>Delete</a></td>
+                    @if($user['isActive'] == 1)
+                    <td>Yes</td>
+                    @endif
+                    @if($user['isActive'] == 0)
+                    <td>No</td>
+                    @endif
+                    <td>
+                    <a href={{ "delete/".$user['id'] }}>Delete</a>
+                     | 
+                    <a href="javascript:void(0)" onclick="toggleActiveStatus({{ $user['id'] }})">Toggle Active Status</a>
+                    </td>
                     </tr>
                     @endforeach
                 </tbody>
                 </table>
             </div>
         </div>
+        <script>
+            function toggleActiveStatus(id){
+                $.get('/admin/'+id, function(user){
+                    let name = user.name;
+                    let email = user.email;
+                    let password = user.password;
+                    let isUser = user.isUser;
+                    let isActive = user.isActive;
+                })
+                $.ajax({
+                    url: "{{route('activeStatus.update')}}",
+                    type:"PUT",
+                    data: {
+                        name:name,
+                        email:email,
+                        password:password,
+                        isUser:isUser,
+                        isActive:isActive,
+                    }
+                })
+            }
+        </script>
 @endsection

@@ -34,6 +34,8 @@ Route::group(['middleware'=>['AuthCheck']], function(){
     Route::get('/admin/settings', [MainController::class, 'settings']);
     Route::get('/admin/staff', [MainController::class, 'staff']);
     Route::get('/admin/delete/{id}', [MainController::class, 'delete']);
+    Route::get('/admin/{id}', [MainController::class, 'getUserByID']);
+    Route::put('/admin', [MainController::class, 'updateActiveStatus'])->name('activeStatus.update');
     Route::get('/user/dashboard', [MainController::class, 'userDashboard']);
     Route::get('/user/profile', [MainController::class, 'userProfile']);
 });

@@ -38,9 +38,8 @@ class MainController extends Controller
         }else{
             $admin->isUser=0;
         }
+        $admin->isActive=1;
         $save = $admin->save();
-
-
 
         if ($save){
             return back()->with('Success','New User has been successfully added to database');
@@ -54,8 +53,6 @@ class MainController extends Controller
         $request->validate([
             'email'=>'required|email',
             'password'=>'required|min:8|max:12',
-            
-        
         ]);
 
         $userInfo = Admin::where('email', '=', $request->email)->first();
@@ -123,6 +120,22 @@ class MainController extends Controller
         $data=Admin::find($id);
         $data->delete();
         return redirect('admin/staff');
+    }
+
+    function getUserByID($id){
+        $user = Admin::find($id);
+        return response()->json($user);
+    }
+
+    function updateActiveStatus(Request $request){
+        $user = Admin::find($request->id);
+        $user->name=$request->name;
+        $user->email=$request->email;
+        $user->password= Hash::make($request->password);
+        $user->isUser = $request->isUser;
+        $user->isActive=0;
+        $user->save();
+        return response()->json($user);
 
     }
 }
