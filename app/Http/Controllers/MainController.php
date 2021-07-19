@@ -131,10 +131,17 @@ class MainController extends Controller
         $user = Admin::find($request->id);
         $user->name=$request->name;
         $user->email=$request->email;
-        $user->password= Hash::make($request->password);
+        $user->password= $request->password;
         $user->isUser = $request->isUser;
-        $user->isActive=0;
+        if ($request->isActive == 1){
+            $user->isActive=0;
+        }
+        if ($request->isActive == 0){
+            $user->isActive=1;
+        }
+        
         $user->save();
+        
         return response()->json($user);
 
     }

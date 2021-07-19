@@ -1,5 +1,40 @@
 @extends('layouts.master')
 @section('content')
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+        <script type="text/javascript" src="./javascript.js"></script>
+        <script
+        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCJnj2nWoM86eU8Bq2G4lSNz3udIkZT4YY&sensor=false">
+        </script>
+        <script>
+            function toggleActiveStatus(id){
+                console.log('inside toggle function');
+                $.get('/admin/'+id, function(user){
+                    let id=user.id;
+                    let name = user.name;
+                    let email = user.email;
+                    let password = user.password;
+                    let isUser = user.isUser;
+                    let isActive = user.isActive;
+                
+                 $.ajax({
+                    url: "{{route('activeStatus.update')}}",
+                    type:"PUT",
+                    data: {
+                        id:id,
+                        name:name,
+                        email:email,
+                        password:password,
+                        isUser:isUser,
+                        isActive:isActive,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success:function(response){
+                        console.log(response);
+                    }
+                })
+                 });
+            }
+        </script>
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <h4>Dashboard</h4><hr>
@@ -62,7 +97,7 @@
                     <td>
                     <a href={{ "delete/".$user['id'] }}>Delete</a>
                      | 
-                    <a href="javascript:void(0)" onclick="toggleActiveStatus({{ $user['id'] }})">Toggle Active Status</a>
+                    <a href="javascript:void(0)" onclick="toggleActiveStatus({{$user['id']}})">Toggle Active Status</a>
                     </td>
                     </tr>
                     @endforeach
@@ -70,26 +105,5 @@
                 </table>
             </div>
         </div>
-        <script>
-            function toggleActiveStatus(id){
-                $.get('/admin/'+id, function(user){
-                    let name = user.name;
-                    let email = user.email;
-                    let password = user.password;
-                    let isUser = user.isUser;
-                    let isActive = user.isActive;
-                })
-                $.ajax({
-                    url: "{{route('activeStatus.update')}}",
-                    type:"PUT",
-                    data: {
-                        name:name,
-                        email:email,
-                        password:password,
-                        isUser:isUser,
-                        isActive:isActive,
-                    }
-                })
-            }
-        </script>
+        
 @endsection
