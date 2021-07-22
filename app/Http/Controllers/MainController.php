@@ -63,12 +63,16 @@ class MainController extends Controller
             //check password
             if (Hash::check($request->password, $userInfo->password)){
                 $request->session()->put('LoggedUser', $userInfo->id);
-                if($userInfo->isUser == 0){
-                    return redirect('admin/dashboard');
-                }
-                if($userInfo->isUser == 1){
-                    return redirect('user/dashboard');
-                }
+                
+                    if ($userInfo->isActive == 0){
+                        return back()->with('fail','Your account is currently inactive.');
+                    }
+                    if($userInfo->isUser == 0){
+                        return redirect('admin/dashboard');
+                    }
+                    if($userInfo->isUser == 1){
+                        return redirect('user/dashboard');
+                    }
                 
             }else{
                 return back()->with('fail','Incorrect password!');
