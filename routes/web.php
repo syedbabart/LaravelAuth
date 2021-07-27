@@ -33,9 +33,17 @@ Route::group(['middleware'=>['AuthCheck']], function(){
     Route::get('/admin/profile', [MainController::class, 'profile']);
     Route::get('/admin/settings', [MainController::class, 'settings']);
     Route::get('/admin/staff', [MainController::class, 'staff']);
+    Route::get('/admin/createNewRole', [MainController::class, 'createNewRole'])->name('CreateNewRole');
     Route::get('/admin/delete/{id}', [MainController::class, 'delete']);
+    Route::get('/admin/makeManager/{id}', [MainController::class, 'makeManager']);
+    Route::get('/admin/makeAdmin/{id}', [MainController::class, 'makeAdmin']);
+    Route::get('/admin/revokeManager/{id}', [MainController::class, 'revokeManager']);
+    Route::get('/admin/revokeAdmin/{id}', [MainController::class, 'revokeAdmin']);
     Route::get('/admin/{id}', [MainController::class, 'getUserByID']);
     Route::put('/admin', [MainController::class, 'updateActiveStatus'])->name('activeStatus.update');
     Route::get('/user/dashboard', [MainController::class, 'userDashboard']);
     Route::get('/user/profile', [MainController::class, 'userProfile']);
+    Route::get('/manager/dashboard', [MainController::class, 'managerDashboard']);
+    Route::get('/manager/profile', [MainController::class, 'managerProfile']);
+    Route::get('/manager/staff', [MainController::class, 'managerStaff']);
 });

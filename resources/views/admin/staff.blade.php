@@ -13,7 +13,6 @@
                     let name = user.name;
                     let email = user.email;
                     let password = user.password;
-                    let isUser = user.isUser;
                     let isActive = user.isActive;
                 
                  $.ajax({
@@ -24,7 +23,6 @@
                         name:name,
                         email:email,
                         password:password,
-                        isUser:isUser,
                         isActive:isActive,
                         _token: "{{ csrf_token() }}"
                     },
@@ -42,19 +40,45 @@
                     <thead>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Admin or User?</th>
+                        <th>Role</th>
                         <th></th>
                     </thead>
                     <tbody>
                         <tr>
                             <td>{{ $LoggedUserInfo['name'] }}</td>
                             <td>{{ $LoggedUserInfo['email'] }}</td>
-                            @if($LoggedUserInfo['isUser'] == 1)
-                            <td>User</td>
-                            @endif
-                            @if($LoggedUserInfo['isUser'] == 0)
-                            <td>Admin</td>
-                            @endif
+                            @php
+                                $is_admin = false;
+                                $is_manager = false;
+                            @endphp
+                            @foreach($user_roles as $users_roles)
+                                @if($LoggedUserInfo['id'] == $users_roles['user_id'])
+                                @php
+                                    if($users_roles['role_id'] == 1){
+                                    $is_admin = true;
+                                    }
+                                    if($users_roles['role_id'] == 2){
+                                    $is_manager = true;
+                                    }
+                                @endphp
+                                @endif
+                            @endforeach
+                           @php
+                                if($is_admin){
+                                    if($is_manager){
+                                        $r = "User, Admin, Manager";
+                                    }else{
+                                        $r = "User, Admin";
+                                    }
+                                }else{
+                                    if($is_manager){
+                                        $r = "User, Manager";
+                                    }else{
+                                        $r = "User";
+                                    }
+                                }
+                           @endphp
+                            <td>{{$r}} </td>
                             <td><a href="{{ route('auth.logout') }}">Logout</a></td>
                         </tr>
                     </tbody>
@@ -72,33 +96,78 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Admin or User?</th>
+                    <th>Roles</th>
                     <th>Is Active?</th>
                     <th>Options</th>
+                    <th>Edit Roles</th>
                 </thead>
                 <tbody>
                     @foreach($users as $user)
+                    @php
+                        $isManager = False;
+                        $isAdmin = False;
+                    @endphp
+                    @foreach($user_roles as $users_roles)
+                    @php
+                    if($user['id'] == $users_roles['user_id']){
+                        if($users_roles['role_id'] == 2){
+                            $isManager = True;
+                        }
+                        if($users_roles['role_id'] == 1){
+                            $isAdmin = True;                           
+                        }
+                    }
+                    @endphp
+                    @endforeach
+                    @php
+                    if($isAdmin){
+                        if($isManager){
+                            $roles = "User, Admin, Manager";
+                            $is_admin_and_manager = true;
+                        }else{
+                            $roles = "User, Admin";
+                        }
+                    }else{
+                        if($isManager){
+                            $roles = "User, Manager";
+                        }else{
+                            $roles = "User";
+                        }
+                    }
+                    @endphp
                     <tr>
                     <td>{{ $user['id'] }}</td>
                     <td>{{ $user['name'] }}</td>
                     <td>{{ $user['email'] }}</td>
-                    @if($user['isUser'] == 1)
-                    <td>User</td>
-                    @endif
-                    @if($user['isUser'] == 0)
-                    <td>Admin</td>
-                    @endif
+                    <td>{{$roles}} </td>
                     @if($user['isActive'] == 1)
                     <td>Yes</td>
                     @endif
                     @if($user['isActive'] == 0)
                     <td>No</td>
                     @endif
+
                     <td>
                     <a href={{ "delete/".$user['id'] }}>Delete</a>
                      | 
                     <a href="javascript:void(0)" onclick="toggleActiveStatus({{$user['id']}})">Toggle Active Status</a>
                     </td>
+
+                    @if(!$isAdmin && !$isManager)
+                    <td><a href={{ "makeManager/".$user['id'] }}>Make Manager</a> | <a href={{ "makeAdmin/".$user['id'] }}>Make Admin</a></td>
+                    @endif
+
+                    @if($isAdmin && !$isManager)
+                    <td><a href={{ "makeManager/".$user['id'] }}>Make Manager</a> | <a href={{ "revokeAdmin/".$user['id'] }}>Revoke Admin</a></td>
+                    @endif
+
+                    @if($isManager && !$isAdmin)
+                    <td><a href={{ "makeAdmin/".$user['id'] }}>Make Admin</a> | <a href={{ "revokeManager/".$user['id'] }}>Revoke Manager</a></td>
+                    @endif
+
+                    @if($isManager && $isAdmin)
+                    <td><a href={{ "revokeAdmin/".$user['id'] }}>Revoke Admin</a> | <a href={{ "revokeManager/".$user['id'] }}>Revoke Manager</a></td>
+                    @endif
                     </tr>
                     @endforeach
                 </tbody>

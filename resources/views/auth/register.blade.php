@@ -42,11 +42,11 @@
                     <input type="password" class="form-control" name='password' placeholder="Enter password"> 
                     <span class="text-danger">@error('password'){{ $message }} @enderror</span>               
                 </div>
-                <div class="form-group">
+                <!--div class="form-group">
                     <label>Is User?</label>
                     <input type="checkbox" class="form-control" name='isUser'> 
                     <span class="text-danger">@error('isUser'){{ $message }} @enderror</span>               
-                </div>
+                </div-->
                 <button type="submit" class="btn btn-block btn-primary">Sign Up!</button>
                 <br>
                 <a href="{{ route('auth.login') }}">Sign In to Existing Account</a>

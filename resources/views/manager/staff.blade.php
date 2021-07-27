@@ -11,7 +11,52 @@
                         <th></th>
                     </thead>
                     <tbody>
-                    <tr>
+                        <tr>
+                        <td>{{ $LoggedUserInfo['name'] }}</td>
+                            <td>{{ $LoggedUserInfo['email'] }}</td>
+                            @php
+                                $r = 10;
+                            @endphp
+                            @foreach($user_roles as $users_roles)
+                                @if($LoggedUserInfo['id'] == $users_roles['user_id'])
+                                @php
+                                    if($r > $users_roles['role_id']){
+                                    $r = $users_roles['role_id'];
+                                    }
+                                @endphp
+                                @endif
+                            @endforeach
+                            @if($r == 1)
+                            <td>Admin</td>
+                            @endif
+                            @if($r == 2)
+                            <td>Manager</td>
+                            @endif
+                            @if($r == 3)
+                            <td>User</td>
+                            @endif
+                            <td><a href="{{ route('auth.logout') }}">Logout</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ul>
+                    <li> <a href="/admin/dashboard">Dashboard</a></li>
+                    <li> <a href="/admin/profile">Profile</a></li>
+                    <li> <a href="/admin/settings">Settings</a></li>
+                    <li> <a href="/admin/staff">Staff</a></li>
+
+                </ul>
+                <h4>Staff</h4>
+                <table class="table table-hover">
+                <thead>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Is Active?</th>
+                </thead>
+                <tbody>
+                <tr>
                             <td>{{ $LoggedUserInfo['name'] }}</td>
                             <td>{{ $LoggedUserInfo['email'] }}</td>
                             @php
@@ -48,18 +93,8 @@
                             <td>{{$r}} </td>
                             <td><a href="{{ route('auth.logout') }}">Logout</a></td>
                         </tr>
-                    </tbody>
                 </table>
-                <ul>
-                    <li> <a href="/admin/dashboard">Dashboard</a></li>
-                    <li> <a href="/admin/profile">Profile</a></li>
-                    <li> <a href="/admin/settings">Settings</a></li>
-                    <li> <a href="/admin/staff">Staff</a></li>
-                </ul>
-                <h4>Settings</h4>
-                <ul>
-                    <li> <a href="">Create New Role</a>
-                </ul>
             </div>
         </div>
+        
 @endsection

@@ -18,7 +18,6 @@ class CreateAdminsTable extends Migration
             $table->text('name');
             $table->text('email');
             $table->text('password');
-            $table->boolean('isUser');
             $table->boolean('isActive');
             $table->timestamps();
         });
