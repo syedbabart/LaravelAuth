@@ -72,8 +72,8 @@ class MainController extends Controller
             //check password
             if (Hash::check($request->password, $userInfo->password)){
                 $request->session()->put('LoggedUser', $userInfo->id);
-                $isAdmin = UserRoles::where(['user_id'=>$userInfo->id, 'role_id'=>1]);
-                $isManager = UserRoles::where(['user_id'=>$userInfo->id, 'role_id'=>2]);
+                $isAdmin = UserRoles::where(['user_id'=>$userInfo->id, 'role_id'=>1])->first();
+                $isManager = UserRoles::where(['user_id'=>$userInfo->id, 'role_id'=>2])->first();
                 
                     if ($userInfo->isActive == 0){
                         return back()->with('fail','Your account is currently inactive.');

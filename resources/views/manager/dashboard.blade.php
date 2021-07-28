@@ -51,11 +51,9 @@
                     </tbody>
                 </table>
                 <ul>
-                    <li> <a href="/admin/dashboard">Dashboard</a></li>
-                    <li> <a href="/admin/profile">Profile</a></li>
-                    <li> <a href="/admin/settings">Settings</a></li>
-                    <li> <a href="/admin/staff">Staff</a></li>
-
+                    <li> <a href="/manager/dashboard">Dashboard</a></li>
+                    <li> <a href="/manager/profile">Profile</a></li>
+                    <li> <a href="/manager/staff">Staff</a></li>
                 </ul>
             </div>
         </div>
