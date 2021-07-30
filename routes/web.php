@@ -33,7 +33,8 @@ Route::group(['middleware'=>['AuthCheck']], function(){
     Route::get('/admin/profile', [MainController::class, 'profile']);
     Route::get('/admin/settings', [MainController::class, 'settings']);
     Route::get('/admin/staff', [MainController::class, 'staff']);
-    Route::get('/admin/createNewRole', [MainController::class, 'createNewRole'])->name('CreateNewRole');
+    Route::get('/admin/addUsers', [MainController::class, 'addUsers'])->name('addUsers');
+    Route::post('/users', [MainController::class, 'addNewUsers']);
     Route::get('/admin/delete/{id}', [MainController::class, 'delete']);
     Route::get('/admin/makeManager/{id}', [MainController::class, 'makeManager']);
     Route::get('/admin/makeAdmin/{id}', [MainController::class, 'makeAdmin']);

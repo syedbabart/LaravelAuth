@@ -7,7 +7,7 @@
                     <thead>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Admin or User?</th>
+                        <th>Roles</th>
                         <th></th>
                     </thead>
                     <tbody>
@@ -58,7 +58,7 @@
                 </ul>
                 <h4>Settings</h4>
                 <ul>
-                    <li> <a href="">Create New Role</a>
+                    <li> <a href="/admin/addUsers">Add New User</a>
                 </ul>
             </div>
         </div>

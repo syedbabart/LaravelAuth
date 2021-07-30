@@ -7,7 +7,7 @@
                     <thead>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Admin or User?</th>
+                        <th>Roles</th>
                         <th></th>
                     </thead>
                     <tbody>

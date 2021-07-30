@@ -225,7 +225,12 @@ class MainController extends Controller
         return redirect('admin/staff');
     }
 
-    function createNewRole(){
+    function addUsers(){
+        return view('admin.addNewUsers');
+    }
 
+    function addNewUsers(Request $request){
+        $data=$request->all();
+        
     }
 }
