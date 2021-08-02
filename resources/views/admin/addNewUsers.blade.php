@@ -28,7 +28,7 @@
                      <input type="text" name="customer_address" class="form-control" placeholder="Please enter your Address">
                  </div></div-->
 
-             </div></div>
+             </div>
              <div class="panel panel-footer" >
                  <table class="table table-bordered">
                      <thead>
@@ -40,13 +40,12 @@
                          </tr>
                      </thead>
                      <tbody>
-         <tr>
-         <td><input type="text" name="user_names[]" class="form-control" required=""></td>
-         <td><input type="text" name="emails[]" class="form-control"></td>   
-         <td><input type="text" name="passwords[]" class="form-control" required=""></td>
-         <td><a href="#" class="btn btn-danger remove"><i class="glyphicon glyphicon-remove"></i></a></td>
-         </tr>
-                         </tr>
+                        <tr>
+                            <td><input type="text" name="user_names[]" class="form-control" required=""></td>
+                            <td><input type="text" name="emails[]" class="form-control"></td>   
+                            <td><input type="text" name="passwords[]" class="form-control" required=""></td>
+                            <td><a href="#" class="btn btn-danger remove"><i class="glyphicon glyphicon-remove"></i></a></td>
+                        </tr>
                      </tbody>
                      <tfoot>
                          <tr>

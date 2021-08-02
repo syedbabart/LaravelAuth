@@ -9,15 +9,15 @@ use Illuminate\Support\Facades\Hash;
 
 class MainController extends Controller
 {
-    function login(){
+    public function login(){
         return view('auth.login');
     }
 
-    function register(){
+    public function register(){
         return view('auth.register');
     }
 
-    function save(Request $request){
+    public function save(Request $request){
         //validating requests
         $request->validate([
             'name'=>'required',
@@ -58,7 +58,7 @@ class MainController extends Controller
         
     }
 
-    function check(Request $request){
+    public function check(Request $request){
         $request->validate([
             'email'=>'required|email',
             'password'=>'required|min:8|max:12',
@@ -72,15 +72,23 @@ class MainController extends Controller
             //check password
             if (Hash::check($request->password, $userInfo->password)){
                 $request->session()->put('LoggedUser', $userInfo->id);
-                $isAdmin = UserRoles::where(['user_id'=>$userInfo->id, 'role_id'=>1])->first();
-                $isManager = UserRoles::where(['user_id'=>$userInfo->id, 'role_id'=>2])->first();
+                $roles = array();
+                $ids = array();
+                foreach($userInfo->roles as $role){
+                    $pivot = $role->pivot;
+                    array_push($roles, $pivot);
+                }
+                foreach($roles as $idse){
+                    array_push($ids, $idse->role_id);
+                }
+                
                 
                     if ($userInfo->isActive == 0){
                         return back()->with('fail','Your account is currently inactive.');
                     }
-                    if($isAdmin){
+                    if(in_array(1, $ids)){
                         return redirect('/admin/dashboard');
-                    }elseif($isManager){
+                    }elseif(in_array(2, $ids)){
                         return redirect('/manager/dashboard');
                     }else{
                         return redirect('/user/dashboard');
@@ -93,77 +101,77 @@ class MainController extends Controller
         }
     }
 
-    function logout(){
+    public function logout(){
         if(session()->has('LoggedUser')){
             session()->pull('LoggedUser');
             return redirect('/auth/login');
         }
     }
 
-    function dashboard(){
+    public function dashboard(){
         $users = Admin::all();
         $user_roles = UserRoles::all();
         $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
         return view('admin.dashboard', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
     }
 
-    function settings(){
+    public function settings(){
         $users = Admin::all();
         $user_roles = UserRoles::all();
         $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
         return view('admin.settings', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
     }
 
-    function profile(){
+    public function profile(){
         $users = Admin::all();
         $user_roles = UserRoles::all();
         $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
         return view('admin.profile', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
     }
 
-    function staff(){
+    public function staff(){
         $users = Admin::all();
         $user_roles = UserRoles::all();
         $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
         return view('admin.staff', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
     }
 
-    function userDashboard(){
+    public function userDashboard(){
         $users = Admin::all();
         $user_roles = UserRoles::all();
         $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
         return view('user.dashboard', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
     }
 
-    function userProfile(){
+    public function userProfile(){
         $users = Admin::all();
         $user_roles = UserRoles::all();
         $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
         return view('user.profile', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
     }
 
-    function managerDashboard(){
+    public function managerDashboard(){
         $users = Admin::all();
         $user_roles = UserRoles::all();
         $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
         return view('manager.dashboard', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
     }
 
-    function managerProfile(){
+    public function managerProfile(){
         $users = Admin::all();
         $user_roles = UserRoles::all();
         $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
         return view('manager.profile', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
     }
 
-    function managerStaff(){
+    public function managerStaff(){
         $users = Admin::all();
         $user_roles = UserRoles::all();
         $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
         return view('manager.staff', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
     }
 
-    function delete($id){
+    public function delete($id){
         $data=Admin::find($id);
         $data->delete();
         $user_roles=UserRoles::where('user_id','=',$id);
@@ -171,12 +179,12 @@ class MainController extends Controller
         return redirect('admin/staff');
     }
 
-    function getUserByID($id){
+    public function getUserByID($id){
         $user = Admin::find($id);
         return response()->json($user);
     }
 
-    function updateActiveStatus(Request $request){
+    public function updateActiveStatus(Request $request){
         $user = Admin::find($request->id);
         $user->name=$request->name;
         $user->email=$request->email;
@@ -193,7 +201,7 @@ class MainController extends Controller
 
     }
 
-    function makeManager($id){
+    public function makeManager($id){
         $data=Admin::find($id);
         $role = new UserRoles;
         $role->user_id = $data->id;
@@ -202,7 +210,7 @@ class MainController extends Controller
         return redirect('admin/staff');
     }
 
-    function makeAdmin($id){
+    public function makeAdmin($id){
         $data=Admin::find($id);
         $role = new UserRoles;
         $role->user_id = $data->id;
@@ -211,26 +219,43 @@ class MainController extends Controller
         return redirect('admin/staff');
     }
 
-    function revokeAdmin($id){
+    public function revokeAdmin($id){
         $data=Admin::find($id);
         $admin_role=UserRoles::where(['user_id'=>$data->id, 'role_id'=>1]);
         $admin_role->delete();
         return redirect('admin/staff');
     }
 
-    function revokeManager($id){
+    public function revokeManager($id){
         $data=Admin::find($id);
         $manager_role=UserRoles::where(['user_id'=>$data->id, 'role_id'=>2]);
         $manager_role->delete();
         return redirect('admin/staff');
     }
 
-    function addUsers(){
+    public function addUsers(){
         return view('admin.addNewUsers');
     }
 
-    function addNewUsers(Request $request){
-        $data=$request->all();
-        
+    public function addNewUsers(Request $request){
+
+        if (count($request->emails) > 0){
+            $count = count($request->emails);
+            $data_to_add = array();
+            $i=0;
+            while($i < $count){
+                $data=array(
+                    'name'=>$request->user_names[$i],
+                    'email'=>$request->emails[$i],
+                    'password'=>Hash::make($request->passwords[$i]),
+                    'isActive'=>1,
+                );
+                array_push($data_to_add, $data);
+                $i+=1;
+            }
+            Admin::insert($data_to_add);
+        }
+        return redirect('/admin/staff');
+
     }
 }
