@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('adminNavBar.master')
 @section('content')
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
@@ -46,17 +46,11 @@
                                 }
                            @endphp
                             <td>{{$r}} </td>
-                            <td><a href="{{ route('auth.logout') }}">Logout</a></td>
+                            
                         </tr>
                     </tbody>
                 </table>
-                <ul>
-                    <li> <a href="/admin/dashboard">Dashboard</a></li>
-                    <li> <a href="/admin/profile">Profile</a></li>
-                    <li> <a href="/admin/settings">Settings</a></li>
-                    <li> <a href="/admin/staff">Staff</a></li>
-
-                </ul>
+                
             </div>
         </div>
 @endsection

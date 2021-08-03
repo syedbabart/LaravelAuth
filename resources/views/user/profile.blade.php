@@ -1,33 +1,56 @@
-@extends('layouts.master')
+@extends('userNavBar.master')
 @section('content')
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
-                <h4>Dashboard</h4><hr>
+                <h4>Profile</h4><hr>
                 <table class="table table-hover">
                     <thead>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Admin or User?</th>
+                        <th>Roles</th>
                         <th></th>
                     </thead>
                     <tbody>
-                        <tr>
+                    <tr>
                             <td>{{ $LoggedUserInfo['name'] }}</td>
                             <td>{{ $LoggedUserInfo['email'] }}</td>
-                            @if($LoggedUserInfo['isUser'] == 1)
-                            <td>User</td>
-                            @endif
-                            @if($LoggedUserInfo['isUser'] == 0)
-                            <td>Admin</td>
-                            @endif
-                            <td><a href="{{ route('auth.logout') }}">Logout</a></td>
+                            @php
+                                $is_admin = false;
+                                $is_manager = false;
+                            @endphp
+                            @foreach($user_roles as $users_roles)
+                                @if($LoggedUserInfo['id'] == $users_roles['user_id'])
+                                @php
+                                    if($users_roles['role_id'] == 1){
+                                    $is_admin = true;
+                                    }
+                                    if($users_roles['role_id'] == 2){
+                                    $is_manager = true;
+                                    }
+                                @endphp
+                                @endif
+                            @endforeach
+                           @php
+                                if($is_admin){
+                                    if($is_manager){
+                                        $r = "User, Admin, Manager";
+                                    }else{
+                                        $r = "User, Admin";
+                                    }
+                                }else{
+                                    if($is_manager){
+                                        $r = "User, Manager";
+                                    }else{
+                                        $r = "User";
+                                    }
+                                }
+                           @endphp
+                            <td>{{$r}} </td>
                         </tr>
                     </tbody>
                 </table>
-                <ul>
-                    <li> <a href="/user/dashboard">Dashboard</a></li>
-                    <li> <a href="/user/profile">Profile</a></li>
-                </ul>
+                
             </div>
         </div>
 @endsection
+ 

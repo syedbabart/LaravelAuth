@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('managerNavBar.master')
 @section('content')
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
         <script type="text/javascript" src="./javascript.js"></script>
@@ -35,7 +35,7 @@
         </script>
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
-                <h4>Dashboard</h4><hr>
+                <h4>Staff</h4><hr>
                 <table class="table table-hover">
                     <thead>
                         <th>Name</th>
@@ -79,16 +79,9 @@
                                 }
                            @endphp
                             <td>{{$r}} </td>
-                            <td><a href="{{ route('auth.logout') }}">Logout</a></td>
                         </tr>
                     </tbody>
                 </table>
-                <ul>
-                    <li> <a href="/manager/dashboard">Dashboard</a></li>
-                    <li> <a href="/manager/profile">Profile</a></li>
-                    <li> <a href="/manager/staff">Staff</a></li>
-
-                </ul>
                 <h4>Staff</h4>
                 <table class="table table-hover">
                 <thead>

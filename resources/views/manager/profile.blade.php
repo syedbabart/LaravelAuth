@@ -1,8 +1,8 @@
-@extends('layouts.master')
+@extends('managerNavBar.master')
 @section('content')
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
-                <h4>Dashboard</h4><hr>
+                <h4>Profile</h4><hr>
                 <table class="table table-hover">
                     <thead>
                         <th>Name</th>
@@ -46,16 +46,10 @@
                                 }
                            @endphp
                             <td>{{$r}} </td>
-                            <td><a href="{{ route('auth.logout') }}">Logout</a></td>
+                            
                         </tr>
                     </tbody>
                 </table>
-                <ul>
-                    <li> <a href="/manager/dashboard">Dashboard</a></li>
-                    <li> <a href="/manager/profile">Profile</a></li>
-                    <li> <a href="/manager/staff">Staff</a></li>
-
-                </ul>
             </div>
         </div>
 @endsection

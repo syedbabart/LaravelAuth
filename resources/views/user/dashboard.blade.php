@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('userNavBar.master')
 @section('content')
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
@@ -46,14 +46,10 @@
                                 }
                            @endphp
                             <td>{{$r}} </td>
-                            <td><a href="{{ route('auth.logout') }}">Logout</a></td>
                         </tr>
                     </tbody>
                 </table>
-                <ul>
-                    <li> <a href="/user/dashboard">Dashboard</a></li>
-                    <li> <a href="/user/profile">Profile</a></li>
-                </ul>
+                
             </div>
         </div>
 @endsection

@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('adminNavBar.master')
 @section('content')
 <!DOCTYPE html>
 <html lang="en">
@@ -16,19 +16,6 @@
      <form action='/users' method='POST'>
         {{csrf_field()}}
          <section>
-             <div class="panel panel-header">
-
-                 <!--div class="row">
-                     <div class="col-md-6">
-                 <div class="form-group">
-                     <input type="text" name="customer_name" class="form-control" placeholder="Please enter your name">
-                 </div></div>
-                 <div class="col-md-6">
-                 <div class="form-group">
-                     <input type="text" name="customer_address" class="form-control" placeholder="Please enter your Address">
-                 </div></div-->
-
-             </div>
              <div class="panel panel-footer" >
                  <table class="table table-bordered">
                      <thead>
