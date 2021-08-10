@@ -40,6 +40,8 @@ Route::group(['middleware'=>['AuthCheck']], function(){
     Route::get('/admin/makeAdmin/{id}', [MainController::class, 'makeAdmin']);
     Route::get('/admin/revokeManager/{id}', [MainController::class, 'revokeManager']);
     Route::get('/admin/revokeAdmin/{id}', [MainController::class, 'revokeAdmin']);
+    Route::get('/admin/addRole' , [MainController::class, 'addRole']);
+    Route::get('/admin/addNewRole' , [MainController::class, 'addNewRole']);
     Route::get('/admin/{id}', [MainController::class, 'getUserByID']);
     Route::put('/admin', [MainController::class, 'updateActiveStatus'])->name('activeStatus.update');
     Route::get('/user/dashboard', [MainController::class, 'userDashboard']);

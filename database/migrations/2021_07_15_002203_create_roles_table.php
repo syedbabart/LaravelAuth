@@ -16,25 +16,41 @@ class CreateRolesTable extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->text('roleName');
+            $table->boolean('canAddUser');
+            $table->boolean('canDeleteUser');
+            $table->boolean('canChangeStatus');
+            $table->boolean('canManageRoles');
             $table->timestamps();
         });
 
          // Insert some stuff
         DB::table('roles')->insert(
             array(
-                'roleName' => 'Admin'
+                'roleName' => 'Admin',
+                'canAddUser' => True,
+                'canDeleteUser' => True,
+                'canChangeStatus' => True,
+                'canManageRoles' => True
             )
         );
 
         DB::table('roles')->insert(
             array(
-                'roleName' => 'Manager'
+                'roleName' => 'Manager',
+                'canAddUser' => False,
+                'canDeleteUser' => True,
+                'canChangeStatus' => True,
+                'canManageRoles' => False
             )
         );
 
         DB::table('roles')->insert(
             array(
-                'roleName' => 'User'
+                'roleName' => 'User',
+                'canAddUser' => False,
+                'canDeleteUser' => False,
+                'canChangeStatus' => False,
+                'canManageRoles' => False
             )
         );
     }

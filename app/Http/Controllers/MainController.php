@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Admin;
-use App\Models\UserRoles;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\UserRole;
 use Illuminate\Support\Facades\Hash;
 
 class MainController extends Controller
@@ -21,30 +22,30 @@ class MainController extends Controller
         //validating requests
         $request->validate([
             'name'=>'required',
-            'email'=>'required|email|unique:admins',
+            'email'=>'required|email|unique:users',
             'password'=>'required|min:8|max:12',
             
         ]);
 
         //Insert data into database
        
-        $admin = new Admin;
-        $admin->name=$request->name;
-        $admin->email=$request->email;
-        $admin->password= Hash::make($request->password);
-        $admin->isActive=1;
-        $save = $admin->save();
+        $user = new User;
+        $user->name=$request->name;
+        $user->email=$request->email;
+        $user->password= Hash::make($request->password);
+        $user->isActive=1;
+        $save = $user->save();
 
         
         //create a 'User' role for every new incoming user
-        $role = new UserRoles;
-        $role->user_id = $admin->id;
+        $role = new UserRole;
+        $role->user_id = $user->id;
         $role->role_id = 3;
         $save_user = $role->save();
 
-        if ($admin->id == 1){       //create an 'Admin' role for first user which signs up
-            $role = new UserRoles;
-            $role->user_id = $admin->id;
+        if ($user->id == 1){       //create an 'Admin' role for first user which signs up
+            $role = new UserRole;
+            $role->user_id = $user->id;
             $role->role_id = 1;
             $save_admin = $role->save();
         }
@@ -64,7 +65,8 @@ class MainController extends Controller
             'password'=>'required|min:8|max:12',
         ]);
 
-        $userInfo = Admin::where('email', '=', $request->email)->first();
+        $userInfo = User::where('email', '=', $request->email)->first();
+
 
         if(!$userInfo){
             return back()->with('fail','We do not recognize your email address');
@@ -72,28 +74,13 @@ class MainController extends Controller
             //check password
             if (Hash::check($request->password, $userInfo->password)){
                 $request->session()->put('LoggedUser', $userInfo->id);
-                $roles = array();
-                $ids = array();
-                foreach($userInfo->roles as $role){
-                    $pivot = $role->pivot;
-                    array_push($roles, $pivot);
-                }
-                foreach($roles as $idse){
-                    array_push($ids, $idse->role_id);
+                
+                if ($userInfo->isActive == 0){
+                    return back()->with('fail','Your account is currently inactive.');
                 }
                 
-                
-                    if ($userInfo->isActive == 0){
-                        return back()->with('fail','Your account is currently inactive.');
-                    }
-                    if(in_array(1, $ids)){
-                        return redirect('/admin/dashboard');
-                    }elseif(in_array(2, $ids)){
-                        return redirect('/manager/dashboard');
-                    }else{
-                        return redirect('/user/dashboard');
-                    }   
-                
+                return redirect('/admin/dashboard');
+ 
             }else{
                 return back()->with('fail','Incorrect password!');
             }
@@ -109,83 +96,49 @@ class MainController extends Controller
     }
 
     public function dashboard(){
-        $users = Admin::all();
-        $user_roles = UserRoles::all();
-        $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
-        return view('admin.dashboard', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
+        $roles=Role::all();
+        $user_roles = UserRole::all();
+        $data = ['LoggedUserInfo'=>User::where('id','=', session('LoggedUser'))->first()];
+        return view('admin.dashboard', $data, ['roles'=>$roles])->with(compact('user_roles', $user_roles));
     }
 
     public function settings(){
-        $users = Admin::all();
-        $user_roles = UserRoles::all();
-        $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
-        return view('admin.settings', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
+        $roles=Role::all();
+        $user_roles = UserRole::all();
+        $data = ['LoggedUserInfo'=>User::where('id','=', session('LoggedUser'))->first()];
+        return view('admin.settings', $data, ['roles'=>$roles])->with(compact('user_roles', $user_roles));
     }
 
     public function profile(){
-        $users = Admin::all();
-        $user_roles = UserRoles::all();
-        $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
-        return view('admin.profile', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
+        $roles=Role::all();
+        $user_roles = UserRole::all();
+        $data = ['LoggedUserInfo'=>User::where('id','=', session('LoggedUser'))->first()];
+        return view('admin.profile', $data, ['roles'=>$roles])->with(compact('user_roles', $user_roles));
     }
 
     public function staff(){
-        $users = Admin::all();
-        $user_roles = UserRoles::all();
-        $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
-        return view('admin.staff', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
-    }
-
-    public function userDashboard(){
-        $users = Admin::all();
-        $user_roles = UserRoles::all();
-        $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
-        return view('user.dashboard', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
-    }
-
-    public function userProfile(){
-        $users = Admin::all();
-        $user_roles = UserRoles::all();
-        $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
-        return view('user.profile', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
-    }
-
-    public function managerDashboard(){
-        $users = Admin::all();
-        $user_roles = UserRoles::all();
-        $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
-        return view('manager.dashboard', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
-    }
-
-    public function managerProfile(){
-        $users = Admin::all();
-        $user_roles = UserRoles::all();
-        $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
-        return view('manager.profile', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
-    }
-
-    public function managerStaff(){
-        $users = Admin::all();
-        $user_roles = UserRoles::all();
-        $data = ['LoggedUserInfo'=>Admin::where('id','=', session('LoggedUser'))->first()];
-        return view('manager.staff', $data, ['users'=>$users])->with(compact('user_roles', $user_roles));
+        $users = User::all();
+        $roles=Role::all();
+        $user_roles = UserRole::all();
+        $data = ['LoggedUserInfo'=>User::where('id','=', session('LoggedUser'))->first()];
+        return view('admin.staff', $data, ['users'=>$users])->with(compact('user_roles', $user_roles))->with('roles', $roles);
     }
 
     public function delete($id){
-        $data=Admin::find($id);
+        $data=User::find($id);
         $data->delete();
-        $user_roles=UserRoles::where('user_id','=',$id);
+        $user_roles=UserRole::where('user_id','=',$id);
         $user_roles->delete();
         return redirect('admin/staff');
     }
 
     public function getUserByID($id){
-        $user = Admin::find($id);
+        $user = User::find($id);
         return response()->json($user);
     }
 
     public function updateActiveStatus(Request $request){
-        $user = Admin::find($request->id);
+        $user = User::find($request->id);
         $user->name=$request->name;
         $user->email=$request->email;
         $user->password= $request->password;
@@ -202,8 +155,8 @@ class MainController extends Controller
     }
 
     public function makeManager($id){
-        $data=Admin::find($id);
-        $role = new UserRoles;
+        $data=User::find($id);
+        $role = new UserRole;
         $role->user_id = $data->id;
         $role->role_id = 2;
         $save_user = $role->save();
@@ -211,8 +164,8 @@ class MainController extends Controller
     }
 
     public function makeAdmin($id){
-        $data=Admin::find($id);
-        $role = new UserRoles;
+        $data=User::find($id);
+        $role = new UserRole;
         $role->user_id = $data->id;
         $role->role_id = 1;
         $save_user = $role->save();
@@ -220,15 +173,15 @@ class MainController extends Controller
     }
 
     public function revokeAdmin($id){
-        $data=Admin::find($id);
-        $admin_role=UserRoles::where(['user_id'=>$data->id, 'role_id'=>1]);
+        $data=User::find($id);
+        $admin_role=UserRole::where(['user_id'=>$data->id, 'role_id'=>1]);
         $admin_role->delete();
         return redirect('admin/staff');
     }
 
     public function revokeManager($id){
-        $data=Admin::find($id);
-        $manager_role=UserRoles::where(['user_id'=>$data->id, 'role_id'=>2]);
+        $data=User::find($id);
+        $manager_role=UserRole::where(['user_id'=>$data->id, 'role_id'=>2]);
         $manager_role->delete();
         return redirect('admin/staff');
     }
@@ -253,9 +206,40 @@ class MainController extends Controller
                 array_push($data_to_add, $data);
                 $i+=1;
             }
-            Admin::insert($data_to_add);
+            User::insert($data_to_add);
         }
         return redirect('/admin/staff');
+
+    }
+
+    public function addRole(){
+        return view('admin.addNewRole');
+    }
+
+    public function addNewRole(Request $request){
+        $new_role = new Role;
+        $new_role->roleName = $request->roleName;
+        $new_role->canAddUser=0;
+        $new_role->canDeleteUser=0;
+        $new_role->canChangeStatus=0;
+        $new_role->canManageRoles=0;
+
+        if($request->canAddUser){
+            $new_role->canAddUser = 1;
+        }
+        if($request->canDeleteUser){
+            $new_role->canDeleteUser = 1;
+        }
+        
+        if($request->canChangeStatus){
+            $new_role->canChangeStatus = 1;
+        }
+
+        if($request->canManageRoles){
+            $new_role->canManageRoles = 1;
+        }
+        $new_role->save();
+        return redirect('/admin/settings');
 
     }
 }

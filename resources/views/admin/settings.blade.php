@@ -12,47 +12,37 @@
                     </thead>
                     <tbody>
                     <tr>
+                    <tr>
                             <td>{{ $LoggedUserInfo['name'] }}</td>
                             <td>{{ $LoggedUserInfo['email'] }}</td>
                             @php
-                                $is_admin = false;
-                                $is_manager = false;
+                                $r=" ";
+                                $x=" ";
                             @endphp
                             @foreach($user_roles as $users_roles)
                                 @if($LoggedUserInfo['id'] == $users_roles['user_id'])
                                 @php
-                                    if($users_roles['role_id'] == 1){
-                                    $is_admin = true;
-                                    }
-                                    if($users_roles['role_id'] == 2){
-                                    $is_manager = true;
+                                    foreach($roles as $roless){
+                                        if($roless['id'] == $users_roles['role_id']){
+                                            $r = $r.$x.$roless['roleName'];
+                                        }
                                     }
                                 @endphp
                                 @endif
                             @endforeach
-                           @php
-                                if($is_admin){
-                                    if($is_manager){
-                                        $r = "User, Admin, Manager";
-                                    }else{
-                                        $r = "User, Admin";
-                                    }
-                                }else{
-                                    if($is_manager){
-                                        $r = "User, Manager";
-                                    }else{
-                                        $r = "User";
-                                    }
-                                }
-                           @endphp
                             <td>{{$r}} </td>
-                            
                         </tr>
                     </tbody>
                 </table>
                 <h4>Options</h4>
                 <ul>
+                    @if($user_priveleges['canAddUser'])
                     <li> <a href="/admin/addUsers">Add New Users</a>
+                    @endif
+
+                    @if($user_priveleges['canManageRoles'])
+                    <li> <a href="/admin/addRole">Add New Role</a>
+                    @endif
                 </ul>
             </div>
         </div>

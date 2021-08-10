@@ -26,8 +26,13 @@
       <ul class="nav navbar-nav">
       <li> <a href="/admin/dashboard">Dashboard</a></li>
       <li> <a href="/admin/profile">Profile</a></li>
+
+      @if($user_priveleges['canAddUser'] || $user_priveleges['canManageRoles'])
       <li> <a href="/admin/settings">Settings</a></li>
+      @endif
+      @if($user_priveleges['canDeleteUser'] || $user_priveleges['canChangeStatus'])
       <li> <a href="/admin/staff">Staff</a></li>
+      @endif
 
       </ul>
       
@@ -38,7 +43,7 @@
   </div><!-- /.container-fluid -->
 </nav>
 <div class="container">
-    @yield('content')
+@yield('content')
 </div>
 </body>
 </html>
